@@ -1,6 +1,6 @@
 import { PlayPauseState } from "../../types/types";
 
-export const createPlayPauseSvgIcon = (playOrPause: PlayPauseState, classNames: string[]): SVGSVGElement => {
+export const createPlayPauseSvgIcon = (playOrPause: PlayPauseState, ...classNames:string[]): SVGSVGElement => {
   const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   const iconPath = document.createElementNS(
     'http://www.w3.org/2000/svg',

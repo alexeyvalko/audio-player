@@ -12,4 +12,12 @@ export interface AudioPlayerState {
   play: PlayPauseState;
   muted: 'unmute' | 'mute';
   autoplay: boolean;
+  trackNumber: number
+}
+
+export enum ControlButtons {
+  prev = 'prev',
+  next = 'next',
+  play = 'play',
+  pause = 'pause',
 }

@@ -3,6 +3,7 @@
   --button-radius: 50%;
   --button-color: #fff;
   --icon-color: rgb(56, 56, 56);
+  --transition-duration: 0.2s;
 }
 
 .audio-controls {
@@ -22,7 +23,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: all 0.3s cubic-bezier(0.3, 0, 0.7, 1);
+  transition: all var(--transition-duration) ease-in-out;
   cursor: pointer;
 }
 
@@ -36,6 +37,7 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: all var(--transition-duration) ease-in-out;
 }
 
 .button-icon {
@@ -43,5 +45,5 @@
 }
 
 .pressed {
-  transform: scale(1.1);
+  transform: scale(0.90);
 }

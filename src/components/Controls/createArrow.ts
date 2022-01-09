@@ -1,6 +1,6 @@
 import { ArrowControlOrientation } from "../../types/types";
 
-export const createSvgArrow = (orientation: ArrowControlOrientation, classNames: string[],): SVGSVGElement => {
+export const createSvgArrow = (orientation: ArrowControlOrientation, ...classNames:string[]): SVGSVGElement => {
   const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   const iconPath = document.createElementNS(
     'http://www.w3.org/2000/svg',
