@@ -2,8 +2,7 @@
   "compilerOptions": {
     "incremental": true,
     "module": "es6",
-    "target": "es5",      
-    "baseUrl": "./src",                          
+    "target": "es5",                               
      "rootDir": "./src",
      "outDir": "./dist",   
     "removeComments": true,                         
