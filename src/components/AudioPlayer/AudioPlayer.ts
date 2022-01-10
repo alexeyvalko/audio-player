@@ -28,13 +28,14 @@ export class AudioPlayer {
       trackNumber: 0,
     };
     this.currentTrack = this.getTrack(this.state.trackNumber);
-    this.audio = new Audio();
-    this.audio.src = this.currentTrack.url;
 
-    this.trackInfo = new TrackInfo(this.currentTrack.author, this.currentTrack.name);
     this.element = document.createElement('div');
     this.container = document.createElement('div');
     this.controls = new Controls();
+    this.trackInfo = new TrackInfo(this.currentTrack);
+
+    this.audio = new Audio();
+    this.audio.src = this.currentTrack.url;
   }
 
   getTrack(index: number): AudioInfo {

@@ -1,7 +1,7 @@
 import './controls.css';
 
 import { createPlayPauseSvgIcon } from './createPlayPauseSvgIcon';
-import { createSvgArrow } from './createArrow';
+import { createSvgArrow } from './createSvgArrow';
 import { ControlButtons, PlayPauseState } from '../../types/types';
 
 export class Controls {
