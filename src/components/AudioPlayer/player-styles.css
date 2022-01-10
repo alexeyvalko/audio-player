@@ -1,7 +1,7 @@
 .audio-player {
   position: relative;
   width: 350px;
-  border-radius: 5px;
+  border-radius: 15px;
   background: rgba(233, 145, 130, 0.2);
   backdrop-filter: blur(5px);
   cursor: pointer;
@@ -13,8 +13,9 @@
   overflow: hidden;
   display: flex;
   justify-content: flex-start;
+  flex-wrap: wrap;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 15px;
   padding: 20px;
   background: rgb(38, 100, 212);
   background: linear-gradient(
