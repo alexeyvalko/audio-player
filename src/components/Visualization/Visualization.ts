@@ -19,7 +19,7 @@ export class Visualization {
     const WIDTH = this.element.width;
     const HEIGHT = this.element.height;
 
-    const barWidth = (WIDTH / bufferLength) * 4.2;
+    const barWidth = (WIDTH / bufferLength) * 4.4;
     let barHeight = 0;
     let x = 0;
 
@@ -29,13 +29,14 @@ export class Visualization {
       analyser.getByteFrequencyData(dataArray);
       if (this.ctx !== null) {
         this.ctx.clearRect(0, 0, WIDTH, HEIGHT);
-        for (let i = 0; i < bufferLength; i += 2) {
+        for (let i = 0; i < bufferLength; i += 1) {
           barHeight = dataArray[i]/HEIGHT * 100;
-          const r = barHeight + 35 * (i / bufferLength);
-          const g = 250 * (i / bufferLength);
-          const b = 50;
+          const r = barHeight + 50 * (i / bufferLength);
+          const g = 0
+          const b = 150 - barHeight*2;
+          const opacity = barHeight / bufferLength *0.5+ 0.20
 
-          this.ctx.fillStyle = `rgba(${r},${g},${b}, 0.2)`;
+          this.ctx.fillStyle = `rgba(${r},${g},${b}, ${opacity})`;
           this.ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
           x += barWidth + 1;
         }
