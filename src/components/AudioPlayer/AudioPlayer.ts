@@ -1,5 +1,6 @@
 import './player-styles.css';
 
+import { Visualization } from '../Visualization/Visualization';
 import { TrackInfo } from '../TrackInfo/TrackInfo';
 import { Controls } from '../Controls/Controls';
 import { AudioInfo, AudioPlayerState, ControlButtons } from '../../types/types';
@@ -20,6 +21,10 @@ export class AudioPlayer {
 
   audio: HTMLAudioElement;
 
+  visualization: Visualization;
+
+  analyser: AnalyserNode | null;
+
   constructor() {
     this.state = {
       play: 'pause',
@@ -35,12 +40,62 @@ export class AudioPlayer {
     this.trackInfo = new TrackInfo(this.currentTrack);
 
     this.audio = new Audio();
-    this.audio.src = this.currentTrack.url;
+    this.analyser = null;
+    this.visualization = new Visualization();
   }
 
   getTrack(index: number): AudioInfo {
     const info = playList[index];
     return info;
+  }
+
+  getPlaylistLength() {
+    const { length } = playList;
+    return length;
+  }
+
+  createAudioTrack() {
+    this.audio = new Audio();
+    this.audio.src = this.currentTrack.url;
+    const audioContext = new AudioContext();
+    const audioSrc = audioContext.createMediaElementSource(this.audio);
+    this.analyser = audioContext.createAnalyser();
+    audioSrc.connect(this.analyser);
+    this.analyser.connect(audioContext.destination);
+    this.analyser.fftSize = 512;
+    this.addAudioListeners();
+    this.trackInfo.update(this.currentTrack);
+  }
+
+  nextAudio() {
+    const playlistLength = this.getPlaylistLength();
+    this.state.trackNumber = (this.state.trackNumber + 1) % playlistLength;
+    this.currentTrack = this.getTrack(this.state.trackNumber);
+    this.createAudioTrack();
+  }
+
+  prevAudio() {
+    const playlistLength = this.getPlaylistLength();
+    this.state.trackNumber =
+      this.state.trackNumber === 0
+        ? playlistLength - 1
+        : (this.state.trackNumber - 1) % playlistLength;
+    this.currentTrack = this.getTrack(this.state.trackNumber);
+    this.createAudioTrack();
+  }
+
+  addAudioListeners() {
+    this.audio.oncanplay = async () => {
+      if (this.state.play === 'play') {
+        await this.audio.play();
+        if (this.analyser) {
+          this.visualization.render(this.analyser);
+        }
+      }
+    };
+    this.audio.onended = () => {
+      if (this.state.autoplay) this.nextAudio();
+    };
   }
 
   addControlListeners() {
@@ -51,13 +106,20 @@ export class AudioPlayer {
         button.classList.remove('pressed');
         switch (button.dataset.name) {
           case ControlButtons.prev:
+            this.audio.pause();
+            this.prevAudio();
             break;
           case ControlButtons.next:
+            this.audio.pause();
+            this.nextAudio();
             break;
           case ControlButtons.play:
             this.state.play = ControlButtons.play;
             this.controls.switchPlayPauseButton(ControlButtons.pause);
             await this.audio.play();
+            if (this.analyser) {
+              this.visualization.render(this.analyser);
+            }
             break;
           case ControlButtons.pause:
             this.state.play = ControlButtons.pause;
@@ -78,7 +140,7 @@ export class AudioPlayer {
       }
     };
 
-    const handleMouseUp = (e: Event) => {
+    const handleMouseUpAndLeave = (e: Event) => {
       const target = e.target as Element;
       const button = target.closest('button');
       if (button) {
@@ -92,17 +154,21 @@ export class AudioPlayer {
       });
     });
 
-    this.container.addEventListener('mouseup', handleMouseUp);
+    this.container.addEventListener('mouseout', handleMouseUpAndLeave);
+    this.container.addEventListener('mouseup', handleMouseUpAndLeave);
     this.container.addEventListener('mousedown', handleMouseDown);
   }
 
   init() {
     this.controls.init();
     this.trackInfo.init();
+    this.visualization.init();
+    this.createAudioTrack();
     this.element.classList.add('audio-player');
     this.container.classList.add('audio-container');
     this.container.append(this.trackInfo.container, this.controls.container);
-    this.element.appendChild(this.container);
+    this.element.append(this.container, this.visualization.container);
     this.addControlListeners();
+    this.addAudioListeners();
   }
 }

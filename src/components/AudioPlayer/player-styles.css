@@ -4,6 +4,7 @@
   border-radius: 15px;
   background: rgba(233, 145, 130, 0.2);
   backdrop-filter: blur(5px);
+  overflow: hidden;
   cursor: pointer;
 }
 
@@ -14,6 +15,7 @@
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
+  align-content: flex-start;
   align-items: center;
   border-radius: 15px;
   padding: 20px;
@@ -23,4 +25,10 @@
     rgba(38, 100, 212, 0.49933476808692223) 60%,
     rgba(0, 0, 0, 0) 100%
   );
+
+  transition: all 0.5s ease-in-out;
+}
+
+.audio-container:hover {
+  height: 160px;
 }

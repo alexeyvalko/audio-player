@@ -1,0 +1,14 @@
+.canvas {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  max-height: 18px;
+}
+
+.canvas-container {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius:  0 0 15px 15px;
+}

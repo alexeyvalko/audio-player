@@ -16,6 +16,12 @@ export class TrackInfo {
     this.trackNameElement.textContent = name;
   }
 
+
+  update({ author, name }:AudioInfo) {
+    this.authorElement.textContent = author;
+    this.trackNameElement.textContent = name;
+  }
+  
   init() {
     this.container.classList.add('info-container');
     this.authorElement.classList.add('author-info');
