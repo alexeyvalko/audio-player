@@ -25,6 +25,8 @@ export class AudioPlayer {
 
   analyser: AnalyserNode | null;
 
+  isAudioContext: boolean;
+
   constructor() {
     this.state = {
       play: 'pause',
@@ -41,6 +43,7 @@ export class AudioPlayer {
 
     this.audio = new Audio();
     this.analyser = null;
+    this.isAudioContext = false;
     this.visualization = new Visualization();
   }
 
@@ -54,15 +57,22 @@ export class AudioPlayer {
     return length;
   }
 
+  createAudioContext() {
+    if (!this.isAudioContext) {
+      const audioContext = new AudioContext();
+      const audioSrc = audioContext.createMediaElementSource(this.audio);
+      this.analyser = audioContext.createAnalyser();
+      audioSrc.connect(this.analyser);
+      this.analyser.connect(audioContext.destination);
+      this.analyser.fftSize = 1024;
+      this.isAudioContext = true
+    }
+  }
+
   createAudioTrack() {
+    this.isAudioContext = false;
     this.audio = new Audio();
     this.audio.src = this.currentTrack.url;
-    const audioContext = new AudioContext();
-    const audioSrc = audioContext.createMediaElementSource(this.audio);
-    this.analyser = audioContext.createAnalyser();
-    audioSrc.connect(this.analyser);
-    this.analyser.connect(audioContext.destination);
-    this.analyser.fftSize = 512;
     this.addAudioListeners();
     this.trackInfo.update(this.currentTrack);
   }
@@ -88,6 +98,7 @@ export class AudioPlayer {
     this.audio.oncanplay = async () => {
       if (this.state.play === 'play') {
         await this.audio.play();
+        this.createAudioContext();
         if (this.analyser) {
           this.visualization.render(this.analyser);
         }
@@ -117,6 +128,7 @@ export class AudioPlayer {
             this.state.play = ControlButtons.play;
             this.controls.switchPlayPauseButton(ControlButtons.pause);
             await this.audio.play();
+            this.createAudioContext();
             if (this.analyser) {
               this.visualization.render(this.analyser);
             }

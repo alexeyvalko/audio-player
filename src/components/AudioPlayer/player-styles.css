@@ -26,9 +26,9 @@
     rgba(0, 0, 0, 0) 100%
   );
 
-  transition: all 0.5s ease-in-out;
+  transition: all var(--transition-duration) ease-in-out;
 }
 
 .audio-container:hover {
-  height: 160px;
+  height: 150px;
 }
