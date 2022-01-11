@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "module": "es6",
+    "target": "es5",                               
+     "rootDir": "./src",
+     "outDir": "./dist",   
+    "removeComments": true,                         
+    "strict": true,     
+    "noImplicitAny": true,       
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,                 
+    "esModuleInterop": true,                                                  
+    "forceConsistentCasingInFileNames": true,   
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "jsx": "react"
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
