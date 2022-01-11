@@ -34,7 +34,7 @@ export class Visualization {
           const r = barHeight + 50 * (i / bufferLength);
           const g = 0
           const b = 150 - barHeight*2;
-          const opacity = barHeight / bufferLength *0.5+ 0.10
+          const opacity = barHeight / bufferLength *0.5 + 0.05
 
           this.ctx.fillStyle = `rgba(${r},${g},${b}, ${opacity})`;
           this.ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);

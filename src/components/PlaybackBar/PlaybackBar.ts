@@ -11,6 +11,8 @@ export class PlaybackBar {
 
   totalTime: HTMLDivElement;
 
+  volumeButton:HTMLButtonElement
+
   constructor() {
     this.container = document.createElement('div');
 
@@ -26,6 +28,9 @@ export class PlaybackBar {
     this.volumeSlider.max = '100';
     this.volumeSlider.value = '100';
     this.volumeSlider.name = 'audioVolumeSlider';
+
+    this.volumeButton = document.createElement('button');
+    this.volumeButton.className = 'unmute player-icon';
 
     this.currentTime = document.createElement('div');
     this.currentTime.textContent = '0:00'
@@ -61,6 +66,18 @@ export class PlaybackBar {
     return this.playbackBar;
   }
 
+  getVolumeButton() {
+    return this.volumeButton
+  }
+
+  setVolumeSliderValue(value: string) {
+    this.volumeSlider.value = value
+  }
+
+  getVolumeSlider() {
+    return this.volumeSlider;
+  }
+
   getPlaybackValue() {
     return this.playbackBar.value;
   }
@@ -80,6 +97,6 @@ export class PlaybackBar {
     this.totalTime.classList.add('time')
     this.playbackBar.classList.add('player-slider');
     this.container.classList.add('playback-bar');
-    this.container.append(this.currentTime, this.playbackBar, this.totalTime);
+    this.container.append(this.currentTime, this.playbackBar, this.totalTime, this.volumeButton, this.volumeSlider);
   }
 }

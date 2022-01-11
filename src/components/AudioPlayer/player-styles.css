@@ -28,7 +28,7 @@
 
   transition: all var(--transition-duration) ease-in-out;
 }
-
-.audio-container:hover {
-  height: 150px;
+.audio-player:hover >
+.audio-container {
+  height: 120px;
 }

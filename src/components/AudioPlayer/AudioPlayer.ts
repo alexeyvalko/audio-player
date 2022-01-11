@@ -141,6 +141,22 @@ export class AudioPlayer {
 
   addSlidersListeners() {
     const slider = this.playbackBar.getPlaybackBar();
+    const volumeSlider = this.playbackBar.getVolumeSlider()
+    const volumeButton = this.playbackBar.getVolumeButton()
+
+    const setMuteUnMute = () => {
+      this.state.muted = this.state.muted === 'unmute' ? 'mute' : 'unmute';
+      volumeButton.classList.toggle('mute');
+      volumeButton.classList.toggle('unmute');
+    };
+
+    volumeSlider.oninput = () => {
+      this.playbackBar.showRangeProgress(volumeSlider.name);
+      this.audio.volume = +volumeSlider.value / 100;
+      volumeButton.className =
+      +volumeSlider.value > 0 ? 'player-icon unmute' : 'player-icon mute';
+    };
+
     slider.oninput = () => {
       if (!this.audio.paused) {
         cancelAnimationFrame(this.requestAF);
@@ -154,6 +170,19 @@ export class AudioPlayer {
         requestAnimationFrame(()=> {this.whilePlaying()});
       }
     });
+
+    volumeButton.onclick = () => {
+      setMuteUnMute();
+      if (this.state.muted === 'unmute') {
+        this.audio.muted = false;
+        volumeSlider.value = ` ${this.audio.volume * 100}`
+        this.playbackBar.showRangeProgress(volumeSlider.name);
+      } else {
+        volumeSlider.value = '0'
+        this.playbackBar.showRangeProgress(volumeSlider.name);
+        this.audio.muted = true;
+      }
+    };
   }
 
   addControlListeners() {
