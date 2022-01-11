@@ -1,5 +1,6 @@
 import './player-styles.css';
 
+import { PlaybackBar } from '../PlaybackBar/PlaybackBar';
 import { Visualization } from '../Visualization/Visualization';
 import { TrackInfo } from '../TrackInfo/TrackInfo';
 import { Controls } from '../Controls/Controls';
@@ -27,6 +28,10 @@ export class AudioPlayer {
 
   isAudioContext: boolean;
 
+  playbackBar: PlaybackBar;
+
+  requestAF: number;
+
   constructor() {
     this.state = {
       play: 'pause',
@@ -35,11 +40,13 @@ export class AudioPlayer {
       trackNumber: 0,
     };
     this.currentTrack = this.getTrack(this.state.trackNumber);
+    this.requestAF = 0;
 
     this.element = document.createElement('div');
     this.container = document.createElement('div');
     this.controls = new Controls();
     this.trackInfo = new TrackInfo(this.currentTrack);
+    this.playbackBar = new PlaybackBar();
 
     this.audio = new Audio();
     this.analyser = null;
@@ -65,7 +72,7 @@ export class AudioPlayer {
       audioSrc.connect(this.analyser);
       this.analyser.connect(audioContext.destination);
       this.analyser.fftSize = 1024;
-      this.isAudioContext = true
+      this.isAudioContext = true;
     }
   }
 
@@ -78,6 +85,7 @@ export class AudioPlayer {
   }
 
   nextAudio() {
+    this.playbackBar.setPlayBackValue('0');
     const playlistLength = this.getPlaylistLength();
     this.state.trackNumber = (this.state.trackNumber + 1) % playlistLength;
     this.currentTrack = this.getTrack(this.state.trackNumber);
@@ -85,6 +93,7 @@ export class AudioPlayer {
   }
 
   prevAudio() {
+    this.playbackBar.setPlayBackValue('0');
     const playlistLength = this.getPlaylistLength();
     this.state.trackNumber =
       this.state.trackNumber === 0
@@ -94,7 +103,27 @@ export class AudioPlayer {
     this.createAudioTrack();
   }
 
+  whilePlaying() {
+    this.playbackBar.setPlayBackValue(`${Math.floor(this.audio.currentTime)}`);
+    this.playbackBar.setCurrentTime(this.audio.currentTime)
+    this.playbackBar.showRangeProgress('playbackSlider');
+    this.requestAF = requestAnimationFrame(() => {
+      this.whilePlaying();
+    });
+  }
+
   addAudioListeners() {
+
+    if (this.audio.readyState > 0) {
+      this.playbackBar.setPlayBackMaxValue(this.audio.duration);
+      this.playbackBar.setTotalTime(this.audio.duration)
+    } else {
+      this.audio.onloadedmetadata = () => {
+        this.playbackBar.setPlayBackMaxValue(this.audio.duration);
+        this.playbackBar.setTotalTime(this.audio.duration)
+      };
+    }
+
     this.audio.oncanplay = async () => {
       if (this.state.play === 'play') {
         await this.audio.play();
@@ -103,10 +132,28 @@ export class AudioPlayer {
           this.visualization.render(this.analyser);
         }
       }
-    };
+    };    
     this.audio.onended = () => {
       if (this.state.autoplay) this.nextAudio();
     };
+  }
+
+
+  addSlidersListeners() {
+    const slider = this.playbackBar.getPlaybackBar();
+    slider.oninput = () => {
+      if (!this.audio.paused) {
+        cancelAnimationFrame(this.requestAF);
+      }
+      this.playbackBar.showRangeProgress(slider.name);
+    };
+
+    slider.addEventListener('change', () => {
+      this.audio.currentTime = +this.playbackBar.getPlaybackValue();
+      if (!this.audio.paused) {
+        requestAnimationFrame(()=> {this.whilePlaying()});
+      }
+    });
   }
 
   addControlListeners() {
@@ -128,6 +175,9 @@ export class AudioPlayer {
             this.state.play = ControlButtons.play;
             this.controls.switchPlayPauseButton(ControlButtons.pause);
             await this.audio.play();
+            requestAnimationFrame(() => {
+              this.whilePlaying();
+            });
             this.createAudioContext();
             if (this.analyser) {
               this.visualization.render(this.analyser);
@@ -137,6 +187,7 @@ export class AudioPlayer {
             this.state.play = ControlButtons.pause;
             this.controls.switchPlayPauseButton(ControlButtons.play);
             this.audio.pause();
+            cancelAnimationFrame(this.requestAF);
             break;
           default:
             throw Error('Error while click controls');
@@ -174,13 +225,19 @@ export class AudioPlayer {
   init() {
     this.controls.init();
     this.trackInfo.init();
+    this.playbackBar.init();
     this.visualization.init();
     this.createAudioTrack();
     this.element.classList.add('audio-player');
     this.container.classList.add('audio-container');
-    this.container.append(this.trackInfo.container, this.controls.container);
+    this.container.append(
+      this.trackInfo.container,
+      this.controls.container,
+      this.playbackBar.container,
+    );
     this.element.append(this.container, this.visualization.container);
     this.addControlListeners();
     this.addAudioListeners();
+    this.addSlidersListeners()
   }
 }
