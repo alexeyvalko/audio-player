@@ -85,6 +85,7 @@ export class AudioPlayer {
   }
 
   nextAudio() {
+    this.playbackBar.setCurrentTime(0)
     this.playbackBar.setPlayBackValue('0');
     const playlistLength = this.getPlaylistLength();
     this.state.trackNumber = (this.state.trackNumber + 1) % playlistLength;
@@ -93,6 +94,7 @@ export class AudioPlayer {
   }
 
   prevAudio() {
+    this.playbackBar.setCurrentTime(0)
     this.playbackBar.setPlayBackValue('0');
     const playlistLength = this.getPlaylistLength();
     this.state.trackNumber =
@@ -103,13 +105,10 @@ export class AudioPlayer {
     this.createAudioTrack();
   }
 
-
   displayBufferedAmount(audio = this.audio) {
-    const slider = this.playbackBar.getPlaybackBar()
+    const slider = this.playbackBar.getPlaybackBar();
     if (audio.buffered.length !== 0) {
-      const bufferedAmount = Math.floor(
-        audio.buffered.end(audio.buffered.length - 1),
-      );
+      const bufferedAmount = Math.floor(audio.buffered.end(audio.buffered.length - 1));
       this.playbackBar.container.style.setProperty(
         '--buffered-width',
         `${(bufferedAmount / +slider.max) * 100}%`,
@@ -119,7 +118,7 @@ export class AudioPlayer {
 
   whilePlaying() {
     this.playbackBar.setPlayBackValue(`${Math.floor(this.audio.currentTime)}`);
-    this.playbackBar.setCurrentTime(this.audio.currentTime)
+    this.playbackBar.setCurrentTime(this.audio.currentTime);
     this.playbackBar.showRangeProgress('playbackSlider');
     this.requestAF = requestAnimationFrame(() => {
       this.whilePlaying();
@@ -127,16 +126,15 @@ export class AudioPlayer {
   }
 
   addAudioListeners() {
-
     if (this.audio.readyState > 0) {
       this.playbackBar.setPlayBackMaxValue(this.audio.duration);
-      this.playbackBar.setTotalTime(this.audio.duration)
-      this.displayBufferedAmount()
+      this.playbackBar.setTotalTime(this.audio.duration);
+      this.displayBufferedAmount();
     } else {
       this.audio.onloadedmetadata = () => {
         this.playbackBar.setPlayBackMaxValue(this.audio.duration);
-        this.playbackBar.setTotalTime(this.audio.duration)
-        this.displayBufferedAmount()
+        this.playbackBar.setTotalTime(this.audio.duration);
+        this.displayBufferedAmount();
       };
     }
 
@@ -148,7 +146,7 @@ export class AudioPlayer {
           this.visualization.render(this.analyser);
         }
       }
-    };    
+    };
     this.audio.onended = () => {
       if (this.state.autoplay) this.nextAudio();
     };
@@ -156,11 +154,10 @@ export class AudioPlayer {
     this.audio.onprogress = () => this.displayBufferedAmount();
   }
 
-
   addSlidersListeners() {
     const slider = this.playbackBar.getPlaybackBar();
-    const volumeSlider = this.playbackBar.getVolumeSlider()
-    const volumeButton = this.playbackBar.getVolumeButton()
+    const volumeSlider = this.playbackBar.getVolumeSlider();
+    const volumeButton = this.playbackBar.getVolumeButton();
 
     const setMuteUnMute = () => {
       this.state.muted = this.state.muted === 'unmute' ? 'mute' : 'unmute';
@@ -171,8 +168,7 @@ export class AudioPlayer {
     volumeSlider.oninput = () => {
       this.playbackBar.showRangeProgress(volumeSlider.name);
       this.audio.volume = +volumeSlider.value / 100;
-      volumeButton.className =
-      +volumeSlider.value > 0 ? 'player-icon unmute' : 'player-icon mute';
+      volumeButton.className = +volumeSlider.value > 0 ? 'player-icon unmute' : 'player-icon mute';
     };
 
     slider.oninput = () => {
@@ -185,7 +181,9 @@ export class AudioPlayer {
     slider.addEventListener('change', () => {
       this.audio.currentTime = +this.playbackBar.getPlaybackValue();
       if (!this.audio.paused) {
-        requestAnimationFrame(()=> {this.whilePlaying()});
+        requestAnimationFrame(() => {
+          this.whilePlaying();
+        });
       }
     });
 
@@ -193,10 +191,10 @@ export class AudioPlayer {
       setMuteUnMute();
       if (this.state.muted === 'unmute') {
         this.audio.muted = false;
-        volumeSlider.value = ` ${this.audio.volume * 100}`
+        volumeSlider.value = ` ${this.audio.volume * 100}`;
         this.playbackBar.showRangeProgress(volumeSlider.name);
       } else {
-        volumeSlider.value = '0'
+        volumeSlider.value = '0';
         this.playbackBar.showRangeProgress(volumeSlider.name);
         this.audio.muted = true;
       }
@@ -269,7 +267,7 @@ export class AudioPlayer {
     this.container.addEventListener('mousedown', handleMouseDown);
   }
 
-  init() {
+   init() {
     this.controls.init();
     this.trackInfo.init();
     this.playbackBar.init();
@@ -285,6 +283,6 @@ export class AudioPlayer {
     this.element.append(this.container, this.visualization.container);
     this.addControlListeners();
     this.addAudioListeners();
-    this.addSlidersListeners()
+    this.addSlidersListeners();
   }
 }
