@@ -103,6 +103,20 @@ export class AudioPlayer {
     this.createAudioTrack();
   }
 
+
+  displayBufferedAmount(audio = this.audio) {
+    const slider = this.playbackBar.getPlaybackBar()
+    if (audio.buffered.length !== 0) {
+      const bufferedAmount = Math.floor(
+        audio.buffered.end(audio.buffered.length - 1),
+      );
+      this.playbackBar.container.style.setProperty(
+        '--buffered-width',
+        `${(bufferedAmount / +slider.max) * 100}%`,
+      );
+    }
+  }
+
   whilePlaying() {
     this.playbackBar.setPlayBackValue(`${Math.floor(this.audio.currentTime)}`);
     this.playbackBar.setCurrentTime(this.audio.currentTime)
@@ -117,10 +131,12 @@ export class AudioPlayer {
     if (this.audio.readyState > 0) {
       this.playbackBar.setPlayBackMaxValue(this.audio.duration);
       this.playbackBar.setTotalTime(this.audio.duration)
+      this.displayBufferedAmount()
     } else {
       this.audio.onloadedmetadata = () => {
         this.playbackBar.setPlayBackMaxValue(this.audio.duration);
         this.playbackBar.setTotalTime(this.audio.duration)
+        this.displayBufferedAmount()
       };
     }
 
@@ -136,6 +152,8 @@ export class AudioPlayer {
     this.audio.onended = () => {
       if (this.state.autoplay) this.nextAudio();
     };
+
+    this.audio.onprogress = () => this.displayBufferedAmount();
   }
 
 
