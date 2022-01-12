@@ -182,6 +182,7 @@ export class AudioPlayer {
 
     slider.addEventListener('change', () => {
       this.audio.currentTime = +this.playbackBar.getPlaybackValue();
+      this.playbackBar.setCurrentTime(this.audio.currentTime)
       if (!this.audio.paused) {
         requestAnimationFrame(() => {
           this.whilePlaying();
