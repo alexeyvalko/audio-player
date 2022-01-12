@@ -11,7 +11,7 @@ export class PlaybackBar {
 
   totalTime: HTMLDivElement;
 
-  volumeButton:HTMLButtonElement
+  volumeButton: HTMLButtonElement;
 
   constructor() {
     this.container = document.createElement('div');
@@ -33,8 +33,9 @@ export class PlaybackBar {
     this.volumeButton.className = 'unmute player-icon';
 
     this.currentTime = document.createElement('div');
-    this.currentTime.textContent = '0:00'
+    this.currentTime.textContent = '0:00';
     this.totalTime = document.createElement('div');
+    this.totalTime.textContent = '0:00';
   }
 
   calculateTime(secs: number) {
@@ -45,13 +46,13 @@ export class PlaybackBar {
   }
 
   setTotalTime(duration: number) {
-    const time = this.calculateTime(duration)
-    this.totalTime.textContent = time
+    const time = this.calculateTime(duration);
+    this.totalTime.textContent = time;
   }
 
   setCurrentTime(duration: number) {
-    const time = this.calculateTime(duration)
-    this.currentTime.textContent = time
+    const time = this.calculateTime(duration);
+    this.currentTime.textContent = time;
   }
 
   setPlayBackValue(value: string) {
@@ -67,11 +68,11 @@ export class PlaybackBar {
   }
 
   getVolumeButton() {
-    return this.volumeButton
+    return this.volumeButton;
   }
 
   setVolumeSliderValue(value: string) {
-    this.volumeSlider.value = value
+    this.volumeSlider.value = value;
   }
 
   getVolumeSlider() {
@@ -93,10 +94,16 @@ export class PlaybackBar {
   }
 
   init() {
-    this.currentTime.classList.add('time')
-    this.totalTime.classList.add('time')
+    this.currentTime.classList.add('time');
+    this.totalTime.classList.add('time');
     this.playbackBar.classList.add('player-slider');
     this.container.classList.add('playback-bar');
-    this.container.append(this.currentTime, this.playbackBar, this.totalTime, this.volumeButton, this.volumeSlider);
+    this.container.append(
+      this.currentTime,
+      this.playbackBar,
+      this.totalTime,
+      this.volumeButton,
+      this.volumeSlider,
+    );
   }
 }

@@ -256,7 +256,7 @@ export class AudioPlayer {
       }
     };
 
-    this.container.addEventListener('click', (e: Event) => {
+    this.controls.container.addEventListener('click', (e: Event) => {
       handleClick(e).catch((err: Error) => {
         throw Error(err.message);
       });

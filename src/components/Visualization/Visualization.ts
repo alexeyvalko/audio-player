@@ -19,7 +19,7 @@ export class Visualization {
     const WIDTH = this.element.width;
     const HEIGHT = this.element.height;
 
-    const barWidth = (WIDTH / bufferLength) * 4.4;
+    const barWidth = (WIDTH / bufferLength) * 5;
     let barHeight = 0;
     let x = 0;
 
@@ -30,11 +30,14 @@ export class Visualization {
       if (this.ctx !== null) {
         this.ctx.clearRect(0, 0, WIDTH, HEIGHT);
         for (let i = 0; i < bufferLength; i += 1) {
-          barHeight = dataArray[i]/HEIGHT * 100;
+          barHeight =
+            i < 40
+              ? (((dataArray[i] / 4) * dataArray[i]) / HEIGHT) * 1.5
+              : (((dataArray[i] / 2) * dataArray[i]) / HEIGHT) * 1.5 * ((i / bufferLength) * 7);
           const r = barHeight + 50 * (i / bufferLength);
-          const g = 0
-          const b = 150 - barHeight*2;
-          const opacity = barHeight / bufferLength *0.5 + 0.05
+          const g = 0;
+          const b = 150 - barHeight * 2;
+          const opacity = (barHeight / bufferLength) * 0.4 + 0.05;
 
           this.ctx.fillStyle = `rgba(${r},${g},${b}, ${opacity})`;
           this.ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);

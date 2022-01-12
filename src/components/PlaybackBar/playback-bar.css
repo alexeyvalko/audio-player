@@ -2,15 +2,18 @@
   --slider-before-width: 0%;
   --volume-before-width: 100%;
   --buffered-width: 0%;
+  --progress-bar-height: 4px;
+  --progress-bar-radius: calc(var(--progress-bar-height)/2);
 }
 
 .playback-bar {
   margin-top: 20px;
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+  align-items: center;
+  height: 20px;
   flex-wrap: wrap;
-  gap: 5px;
 }
 
 .player-slider {
@@ -20,7 +23,7 @@
   position: relative;
   width: 50%;
   padding: 0;
-  height: 15px;
+  height: 20px;
   margin: 0;
   outline: none;
   background-color: transparent;
@@ -39,7 +42,7 @@
   position: relative;
   width: 20%;
   padding: 0;
-  height: 15px;
+  height: 20px;
   outline: none;
   background-color: transparent;
 }
@@ -47,37 +50,37 @@
 .player-volume-slider::-webkit-slider-runnable-track,
 .player-slider::-webkit-slider-runnable-track {
   width: 100%;
-  height: 5px;
+  height: var(--progress-bar-height);
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: var(--progress-bar-radius);
   background: linear-gradient(
     to right,
-    rgba(0, 125, 181, 0.4) var(--buffered-width),
-    rgba(0, 125, 181, 0.2) var(--buffered-width)
+    hsla(199, 100%, 35%, 0.4) 60%,
+    rgba(0, 125, 181, 0.6) var(--buffered-width)
   );
 }
 
 .player-volume-slider::-moz-range-track,
 .player-slider::-moz-range-track {
   width: 100%;
-  height: 5px;
+  height: var(--progress-bar-height);
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: var(--progress-bar-radius);
   background: linear-gradient(
     to right,
-    rgba(0, 125, 181, 0.4) var(--buffered-width),
-    rgba(0, 125, 181, 0.2) var(--buffered-width)
+    rgba(0, 125, 181, 0.4) 60%,
+    rgba(0, 125, 181, 0.6) var(--buffered-width)
   );
 }
 
 .player-slider::before {
   position: absolute;
   content: '';
-  top: 5px;
+  top: 8px;
   left: 0;
-  height: 5px;
+  height: var(--progress-bar-height);
   width: var(--slider-before-width);
-  border-radius: 2px;
+  border-radius: var(--progress-bar-radius);
   background-color: #227aa3;
   cursor: pointer;
 }
@@ -85,11 +88,11 @@
 .player-volume-slider::before {
   position: absolute;
   content: '';
-  top: 5px;
+  top: 8px;
   left: 0;
-  height: 5px;
+  height: var(--progress-bar-height);
   width: var(--volume-before-width);
-  border-radius: 2px;
+  border-radius: var(--progress-bar-radius);
   background-color: #227aa3;
   cursor: pointer;
 }
