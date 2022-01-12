@@ -25,7 +25,6 @@
     rgba(100, 181, 246, 0.5) 60%,
     rgba(0, 0, 0, 0) 100%
   );
-
   transition: all var(--transition-duration) ease-in-out;
 }
 .audio-player:hover >

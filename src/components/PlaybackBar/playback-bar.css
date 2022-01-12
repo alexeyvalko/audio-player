@@ -55,8 +55,8 @@
   border-radius: var(--progress-bar-radius);
   background: linear-gradient(
     to right,
-    hsla(199, 100%, 35%, 0.4) 60%,
-    rgba(0, 125, 181, 0.6) var(--buffered-width)
+    hsla(199, 100%, 35%, 0.5) var(--buffered-width),
+    rgba(0, 125, 181, 0.3) var(--buffered-width)
   );
 }
 
@@ -68,8 +68,8 @@
   border-radius: var(--progress-bar-radius);
   background: linear-gradient(
     to right,
-    rgba(0, 125, 181, 0.4) 60%,
-    rgba(0, 125, 181, 0.6) var(--buffered-width)
+    rgba(0, 125, 181, 0.5) var(--buffered-width),
+    rgba(0, 125, 181, 0.3) var(--buffered-width)
   );
 }
 
@@ -81,7 +81,12 @@
   height: var(--progress-bar-height);
   width: var(--slider-before-width);
   border-radius: var(--progress-bar-radius);
-  background-color: #227aa3;
+  background-color: rgb(34, 122, 163);
+  background: linear-gradient(
+    to right,
+    rgb(34, 122, 163) 90%,
+    rgb(0, 95, 139) 100%
+  );
   cursor: pointer;
 }
 
@@ -93,13 +98,18 @@
   height: var(--progress-bar-height);
   width: var(--volume-before-width);
   border-radius: var(--progress-bar-radius);
-  background-color: #227aa3;
+  background-color: rgb(34, 122, 163);
   cursor: pointer;
 }
 
 .player-volume-slider:hover::before,
 .player-slider:hover::before {
-  background-color: rgba(196, 93, 119, 0.6);
+  background-color: rgb(229, 115, 115);
+  background: linear-gradient(
+    to right,
+    rgb(229, 115, 115) 90%,
+    rgb(197, 14, 41) 100%
+  );
 }
 
 .player-volume-slider::-webkit-slider-thumb,
