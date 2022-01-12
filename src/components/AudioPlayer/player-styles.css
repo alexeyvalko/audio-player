@@ -6,6 +6,7 @@
   backdrop-filter: blur(5px);
   overflow: hidden;
   cursor: pointer;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
 .audio-container {
@@ -25,7 +26,7 @@
     rgba(100, 181, 246, 0.5) 60%,
     rgba(0, 0, 0, 0) 100%
   );
-  transition: all var(--transition-duration) ease-in-out;
+  transition: all var(--transition-duration) cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 .audio-player:hover >
 .audio-container {
