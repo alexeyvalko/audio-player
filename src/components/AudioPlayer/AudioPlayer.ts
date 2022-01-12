@@ -87,6 +87,7 @@ export class AudioPlayer {
   nextAudio() {
     this.playbackBar.setCurrentTime(0)
     this.playbackBar.setPlayBackValue('0');
+    this.playbackBar.showRangeProgress(this.playbackBar.getPlaybackBar().name)
     const playlistLength = this.getPlaylistLength();
     this.state.trackNumber = (this.state.trackNumber + 1) % playlistLength;
     this.currentTrack = this.getTrack(this.state.trackNumber);
@@ -96,6 +97,7 @@ export class AudioPlayer {
   prevAudio() {
     this.playbackBar.setCurrentTime(0)
     this.playbackBar.setPlayBackValue('0');
+    this.playbackBar.showRangeProgress(this.playbackBar.getPlaybackBar().name)
     const playlistLength = this.getPlaylistLength();
     this.state.trackNumber =
       this.state.trackNumber === 0
