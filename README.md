@@ -7,4 +7,4 @@
 
 You can use online [DEMO](https://alexeyvalko-player.netlify.app/) 
 
-![image](https://user-images.githubusercontent.com/60567379/149006563-034198d4-121b-4403-8cb0-ceeb99a1320a.png)
+![image](https://user-images.githubusercontent.com/60567379/149220645-1cf2543a-eaa2-4972-879f-13505d6066f0.png)
