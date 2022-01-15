@@ -70,11 +70,6 @@ export class AudioPlayer {
     this.playlist = await requestPlayList();
   }
 
-  getPlaylistLength() {
-    const { length } = this.playlist;
-    return length;
-  }
-
   createAudioContext() {
     if (!this.isAudioContext) {
       const audioContext = new AudioContext();
@@ -90,6 +85,7 @@ export class AudioPlayer {
     if (this.currentTrack.url !== 'empty') {
       this.isAudioContext = false;
       this.audio = new Audio();
+      this.audio.crossOrigin = "anonymous";
       this.audio.src = this.currentTrack.url;
       this.addAudioListeners();
       this.trackInfo.update(this.currentTrack);
@@ -100,8 +96,7 @@ export class AudioPlayer {
     this.playbackBar.setCurrentTime(0);
     this.playbackBar.setPlayBackValue('0');
     this.playbackBar.showRangeProgress(this.playbackBar.getPlaybackBar().name);
-    const playlistLength = this.getPlaylistLength();
-    this.state.trackNumber = (this.state.trackNumber + 1) % playlistLength;
+    this.state.trackNumber = (this.state.trackNumber + 1) % this.playlist.length;
     this.currentTrack = this.getTrack(this.state.trackNumber);
     this.createAudioTrack();
   }
@@ -110,11 +105,10 @@ export class AudioPlayer {
     this.playbackBar.setCurrentTime(0);
     this.playbackBar.setPlayBackValue('0');
     this.playbackBar.showRangeProgress(this.playbackBar.getPlaybackBar().name);
-    const playlistLength = this.getPlaylistLength();
     this.state.trackNumber =
       this.state.trackNumber === 0
-        ? playlistLength - 1
-        : (this.state.trackNumber - 1) % playlistLength;
+        ? this.playlist.length - 1
+        : (this.state.trackNumber - 1) % this.playlist.length;
     this.currentTrack = this.getTrack(this.state.trackNumber);
     this.createAudioTrack();
   }
