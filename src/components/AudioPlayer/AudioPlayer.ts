@@ -4,8 +4,8 @@ import { PlaybackBar } from '../PlaybackBar/PlaybackBar';
 import { Visualization } from '../Visualization/Visualization';
 import { TrackInfo } from '../TrackInfo/TrackInfo';
 import { Controls } from '../Controls/Controls';
-import { AudioInfo, AudioPlayerState, ControlButtons } from '../../types/types';
-import { playList } from '../../utils/playList';
+import { AudioInfo, AudioPlayerState, ControlButtons, AudioPlayList } from '../../types/types';
+import { requestPlayList } from '../../utils/requestPlayList';
 
 export class AudioPlayer {
   element: HTMLDivElement;
@@ -32,6 +32,8 @@ export class AudioPlayer {
 
   requestAF: number;
 
+  playlist: AudioPlayList;
+
   constructor() {
     this.state = {
       play: 'pause',
@@ -39,8 +41,13 @@ export class AudioPlayer {
       autoplay: true,
       trackNumber: 0,
     };
-    this.currentTrack = this.getTrack(this.state.trackNumber);
+    this.currentTrack = {
+      author: 'Loading...',
+      name: 'Loading...',
+      url: 'empty',
+    };
     this.requestAF = 0;
+    this.playlist = [];
 
     this.element = document.createElement('div');
     this.container = document.createElement('div');
@@ -55,12 +62,16 @@ export class AudioPlayer {
   }
 
   getTrack(index: number): AudioInfo {
-    const info = playList[index];
+    const info = this.playlist[index];
     return info;
   }
 
+  async getPlaylist() {
+    this.playlist = await requestPlayList();
+  }
+
   getPlaylistLength() {
-    const { length } = playList;
+    const { length } = this.playlist;
     return length;
   }
 
@@ -71,23 +82,24 @@ export class AudioPlayer {
       this.analyser = audioContext.createAnalyser();
       audioSrc.connect(this.analyser);
       this.analyser.connect(audioContext.destination);
-      this.analyser.fftSize = 1024;
       this.isAudioContext = true;
     }
   }
 
   createAudioTrack() {
-    this.isAudioContext = false;
-    this.audio = new Audio();
-    this.audio.src = this.currentTrack.url;
-    this.addAudioListeners();
-    this.trackInfo.update(this.currentTrack);
+    if (this.currentTrack.url !== 'empty') {
+      this.isAudioContext = false;
+      this.audio = new Audio();
+      this.audio.src = this.currentTrack.url;
+      this.addAudioListeners();
+      this.trackInfo.update(this.currentTrack);
+    }
   }
 
   nextAudio() {
-    this.playbackBar.setCurrentTime(0)
+    this.playbackBar.setCurrentTime(0);
     this.playbackBar.setPlayBackValue('0');
-    this.playbackBar.showRangeProgress(this.playbackBar.getPlaybackBar().name)
+    this.playbackBar.showRangeProgress(this.playbackBar.getPlaybackBar().name);
     const playlistLength = this.getPlaylistLength();
     this.state.trackNumber = (this.state.trackNumber + 1) % playlistLength;
     this.currentTrack = this.getTrack(this.state.trackNumber);
@@ -95,9 +107,9 @@ export class AudioPlayer {
   }
 
   prevAudio() {
-    this.playbackBar.setCurrentTime(0)
+    this.playbackBar.setCurrentTime(0);
     this.playbackBar.setPlayBackValue('0');
-    this.playbackBar.showRangeProgress(this.playbackBar.getPlaybackBar().name)
+    this.playbackBar.showRangeProgress(this.playbackBar.getPlaybackBar().name);
     const playlistLength = this.getPlaylistLength();
     this.state.trackNumber =
       this.state.trackNumber === 0
@@ -182,7 +194,7 @@ export class AudioPlayer {
 
     slider.addEventListener('change', () => {
       this.audio.currentTime = +this.playbackBar.getPlaybackValue();
-      this.playbackBar.setCurrentTime(this.audio.currentTime)
+      this.playbackBar.setCurrentTime(this.audio.currentTime);
       if (!this.audio.paused) {
         requestAnimationFrame(() => {
           this.whilePlaying();
@@ -270,7 +282,9 @@ export class AudioPlayer {
     this.container.addEventListener('mousedown', handleMouseDown);
   }
 
-   init() {
+  async init() {
+    await this.getPlaylist();
+    this.currentTrack = this.getTrack(this.state.trackNumber);
     this.controls.init();
     this.trackInfo.init();
     this.playbackBar.init();

@@ -43,6 +43,7 @@ module.exports = {
       patterns: [
         { from: 'audio', to: 'audio' },
         { from: './src/favicon.ico', to: '.' },
+        { from: './src/common/audioPlaylist.json', to: './assets/audioPlaylist.json' },
       ],
     }),
   ],
