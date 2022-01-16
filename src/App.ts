@@ -1,15 +1,16 @@
 import { AudioPlayer } from './components/AudioPlayer/AudioPlayer';
+import { requestPlayList } from './utils/requestPlayList';
 
 export class App {
   private rootElement: Element;
 
   container: HTMLDivElement;
 
-  player: AudioPlayer
+  player: AudioPlayer;
 
   constructor(rootElement: Element) {
     this.rootElement = rootElement;
-    this.player = new AudioPlayer()
+    this.player = new AudioPlayer();
     this.container = this.createContainer();
   }
 
@@ -20,8 +21,10 @@ export class App {
   }
 
   async render() {
-    await this.player.init()
-    this.container.append(this.player.element)
+    this.player.init();
+    this.container.append(this.player.element);
     this.rootElement.append(this.container);
+    const playlist = await requestPlayList();
+    this.player.getPlaylist(playlist);
   }
 }

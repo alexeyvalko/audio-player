@@ -5,7 +5,6 @@ import { Visualization } from '../Visualization/Visualization';
 import { TrackInfo } from '../TrackInfo/TrackInfo';
 import { Controls } from '../Controls/Controls';
 import { AudioInfo, AudioPlayerState, ControlButtons, AudioPlayList } from '../../types/types';
-import { requestPlayList } from '../../utils/requestPlayList';
 
 export class AudioPlayer {
   element: HTMLDivElement;
@@ -66,8 +65,9 @@ export class AudioPlayer {
     return info;
   }
 
-  async getPlaylist() {
-    this.playlist = await requestPlayList();
+  getPlaylist(playlist: AudioPlayList) {
+    this.playlist = playlist;
+    this.initAudio()
   }
 
   createAudioContext() {
@@ -85,7 +85,7 @@ export class AudioPlayer {
     if (this.currentTrack.url !== 'empty') {
       this.isAudioContext = false;
       this.audio = new Audio();
-      this.audio.crossOrigin = "anonymous";
+      this.audio.crossOrigin = 'anonymous';
       this.audio.src = this.currentTrack.url;
       this.addAudioListeners();
       this.trackInfo.update(this.currentTrack);
@@ -276,14 +276,20 @@ export class AudioPlayer {
     this.container.addEventListener('mousedown', handleMouseDown);
   }
 
-  async init() {
-    await this.getPlaylist();
+
+  initAudio() {
     this.currentTrack = this.getTrack(this.state.trackNumber);
+    this.createAudioTrack();
+    this.addControlListeners();
+    this.addAudioListeners();
+    this.addSlidersListeners();
+  }
+
+  init() {
     this.controls.init();
     this.trackInfo.init();
     this.playbackBar.init();
     this.visualization.init();
-    this.createAudioTrack();
     this.element.classList.add('audio-player');
     this.container.classList.add('audio-container');
     this.container.append(
@@ -292,8 +298,5 @@ export class AudioPlayer {
       this.playbackBar.container,
     );
     this.element.append(this.container, this.visualization.container);
-    this.addControlListeners();
-    this.addAudioListeners();
-    this.addSlidersListeners();
   }
 }

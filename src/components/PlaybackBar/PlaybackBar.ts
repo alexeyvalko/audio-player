@@ -46,8 +46,10 @@ export class PlaybackBar {
   }
 
   setTotalTime(duration: number) {
-    const time = this.calculateTime(duration);
-    this.totalTime.textContent = time;
+    if (!Number.isNaN(duration)) {
+      const time = this.calculateTime(duration);
+      this.totalTime.textContent = time;
+    }
   }
 
   setCurrentTime(duration: number) {
