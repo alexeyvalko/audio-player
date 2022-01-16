@@ -19,8 +19,8 @@ export class App {
     return element;
   }
 
-  render() {
-    this.player.init()
+  async render() {
+    await this.player.init()
     this.container.append(this.player.element)
     this.rootElement.append(this.container);
   }

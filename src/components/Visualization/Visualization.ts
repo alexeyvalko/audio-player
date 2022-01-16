@@ -13,13 +13,16 @@ export class Visualization {
     this.ctx = this.element.getContext('2d');
   }
 
-  render(analyser: AnalyserNode) {
+
+  render(receivedAnalyser: AnalyserNode) {
+    const analyser = receivedAnalyser;
+    analyser.fftSize = 2048;
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
     const WIDTH = this.element.width;
     const HEIGHT = this.element.height;
 
-    const barWidth = (WIDTH / bufferLength) * 5;
+    const barWidth = (WIDTH / bufferLength) * 7;
     let barHeight = 0;
     let x = 0;
 
@@ -31,13 +34,13 @@ export class Visualization {
         this.ctx.clearRect(0, 0, WIDTH, HEIGHT);
         for (let i = 0; i < bufferLength; i += 1) {
           barHeight =
-            i < 40
-              ? (((dataArray[i] / 4) * dataArray[i]) / HEIGHT) * 1.5
-              : (((dataArray[i] / 2) * dataArray[i]) / HEIGHT) * 1.5 * ((i / bufferLength) * 7);
-          const r = barHeight + 50 * (i / bufferLength);
+            i < 45
+              ? (dataArray[i] / 5) * (dataArray[i] / HEIGHT) * 1.5
+              : (dataArray[i] / 2) * (dataArray[i] / HEIGHT) * 1.5 * ((i / bufferLength) * 7);
+          const r = barHeight + 80 * (i / bufferLength);
           const g = 0;
           const b = 150 - barHeight * 2;
-          const opacity = (barHeight / bufferLength) * 0.4 + 0.05;
+          const opacity = (barHeight / bufferLength) * 0.4 + 0.1;
 
           this.ctx.fillStyle = `rgba(${r},${g},${b}, ${opacity})`;
           this.ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);

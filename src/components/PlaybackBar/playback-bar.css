@@ -47,12 +47,21 @@
   background-color: transparent;
 }
 
-.player-volume-slider::-webkit-slider-runnable-track,
+
+.player-volume-slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: var(--progress-bar-height);
+  cursor: pointer;
+  border-radius: var(--progress-bar-radius);
+  background: rgba(0, 125, 181, 0.3);
+}
+
 .player-slider::-webkit-slider-runnable-track {
   width: 100%;
   height: var(--progress-bar-height);
   cursor: pointer;
   border-radius: var(--progress-bar-radius);
+  background: rgba(0, 125, 181, 0.3);
   background: linear-gradient(
     to right,
     hsla(199, 100%, 35%, 0.5) var(--buffered-width),
@@ -60,12 +69,20 @@
   );
 }
 
-.player-volume-slider::-moz-range-track,
+.player-volume-slider::-moz-range-track {
+  width: 100%;
+  height: var(--progress-bar-height);
+  cursor: pointer;
+  border-radius: var(--progress-bar-radius);
+  background: rgba(0, 125, 181, 0.3);
+}
+
 .player-slider::-moz-range-track {
   width: 100%;
   height: var(--progress-bar-height);
   cursor: pointer;
   border-radius: var(--progress-bar-radius);
+  background: rgba(0, 125, 181, 0.3);
   background: linear-gradient(
     to right,
     rgba(0, 125, 181, 0.5) var(--buffered-width),
@@ -104,11 +121,11 @@
 
 .player-volume-slider:hover::before,
 .player-slider:hover::before {
-  background-color: rgb(229, 115, 115);
+  background-color: #9a0007;
   background: linear-gradient(
     to right,
-    rgb(229, 115, 115) 90%,
-    rgb(197, 14, 41) 100%
+    #d32f2f 90%,
+    #9a0007 100%
   );
 }
 

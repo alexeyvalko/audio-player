@@ -1,8 +1,13 @@
+:root{
+  --player-bgcolor:rgba(233, 145, 130, 0.2);
+  --container-bgcolor: rgba(100, 181, 246, 0.5);
+}
+
 .audio-player {
   position: relative;
   width: 350px;
   border-radius: 15px;
-  background: rgba(233, 145, 130, 0.2);
+  background: var(--player-bgcolor) ;
   backdrop-filter: blur(5px);
   overflow: hidden;
   cursor: pointer;
@@ -20,10 +25,10 @@
   align-items: center;
   border-radius: 15px;
   padding: 20px;
-  background: rgba(100, 181, 246, 0.5);
+  background: var(--container-bgcolor);
   background: linear-gradient(
     90deg,
-    rgba(100, 181, 246, 0.5) 60%,
+    var(--container-bgcolor) 60%,
     rgba(0, 0, 0, 0) 100%
   );
   transition: all var(--transition-duration) cubic-bezier(0.18, 0.89, 0.32, 1.28);
