@@ -33,6 +33,8 @@ export class AudioPlayer {
 
   playlist: AudioPlayList;
 
+  isPlayable: boolean;
+
   constructor() {
     this.state = {
       play: 'pause',
@@ -42,7 +44,7 @@ export class AudioPlayer {
     };
     this.currentTrack = {
       author: 'Loading...',
-      name: 'Loading...',
+      name: '',
       url: 'empty',
     };
     this.requestAF = 0;
@@ -55,6 +57,7 @@ export class AudioPlayer {
     this.playbackBar = new PlaybackBar();
 
     this.audio = new Audio();
+    this.isPlayable = false;
     this.analyser = null;
     this.isAudioContext = false;
     this.visualization = new Visualization();
@@ -67,7 +70,7 @@ export class AudioPlayer {
 
   getPlaylist(playlist: AudioPlayList) {
     this.playlist = playlist;
-    this.initAudio()
+    this.initAudio();
   }
 
   createAudioContext() {
@@ -149,6 +152,7 @@ export class AudioPlayer {
     this.audio.oncanplay = async () => {
       if (this.state.play === 'play') {
         await this.audio.play();
+        this.isPlayable = true;
         this.createAudioContext();
         if (this.analyser) {
           this.visualization.render(this.analyser);
@@ -218,17 +222,24 @@ export class AudioPlayer {
         button.classList.remove('pressed');
         switch (button.dataset.name) {
           case ControlButtons.prev:
-            this.audio.pause();
-            this.prevAudio();
+            if (this.isPlayable) {
+              this.isPlayable = false;
+              this.audio.pause();
+              this.prevAudio();
+            }
             break;
           case ControlButtons.next:
-            this.audio.pause();
-            this.nextAudio();
+            if (this.isPlayable) {
+              this.isPlayable = false;
+              this.audio.pause();
+              this.nextAudio();
+            }
             break;
           case ControlButtons.play:
             this.state.play = ControlButtons.play;
             this.controls.switchPlayPauseButton(ControlButtons.pause);
             await this.audio.play();
+            this.isPlayable = true;
             requestAnimationFrame(() => {
               this.whilePlaying();
             });
@@ -275,7 +286,6 @@ export class AudioPlayer {
     this.container.addEventListener('mouseup', handleMouseUpAndLeave);
     this.container.addEventListener('mousedown', handleMouseDown);
   }
-
 
   initAudio() {
     this.currentTrack = this.getTrack(this.state.trackNumber);
