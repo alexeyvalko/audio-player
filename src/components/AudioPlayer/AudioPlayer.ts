@@ -44,7 +44,7 @@ export class AudioPlayer {
     };
     this.currentTrack = {
       author: 'Loading...',
-      name: '',
+      name: 'Loading...',
       url: 'empty',
     };
     this.requestAF = 0;
@@ -57,7 +57,7 @@ export class AudioPlayer {
     this.playbackBar = new PlaybackBar();
 
     this.audio = new Audio();
-    this.isPlayable = false;
+    this.isPlayable = true;
     this.analyser = null;
     this.isAudioContext = false;
     this.visualization = new Visualization();
@@ -222,14 +222,14 @@ export class AudioPlayer {
         button.classList.remove('pressed');
         switch (button.dataset.name) {
           case ControlButtons.prev:
-            if (this.isPlayable) {
+            if (this.isPlayable || this.state.play === 'pause') {
               this.isPlayable = false;
               this.audio.pause();
               this.prevAudio();
             }
             break;
           case ControlButtons.next:
-            if (this.isPlayable) {
+            if (this.isPlayable || this.state.play === 'pause') {
               this.isPlayable = false;
               this.audio.pause();
               this.nextAudio();
