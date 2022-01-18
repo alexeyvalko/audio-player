@@ -7,14 +7,18 @@ export class Visualization {
 
   ctx: CanvasRenderingContext2D | null;
 
+  animationFrameId: number
+
   constructor() {
     this.element = document.createElement('canvas');
     this.container = document.createElement('div');
     this.ctx = this.element.getContext('2d');
+    this.animationFrameId = 0;
   }
 
 
   render(receivedAnalyser: AnalyserNode) {
+    cancelAnimationFrame(this.animationFrameId)
     const analyser = receivedAnalyser;
     analyser.fftSize = 2048;
     const bufferLength = analyser.frequencyBinCount;
@@ -26,7 +30,7 @@ export class Visualization {
     let barHeight = 0;
     let x = 0;
     const renderFrame = () => {
-      requestAnimationFrame(renderFrame);
+      this.animationFrameId = requestAnimationFrame(renderFrame);
       x = 0;
       analyser.getByteFrequencyData(dataArray);
       if (this.ctx !== null) {
