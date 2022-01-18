@@ -22,6 +22,7 @@ export class Visualization {
     const WIDTH = this.element.width;
     const HEIGHT = this.element.height;
     const barWidth = (WIDTH / bufferLength) * 7;
+    const amountOfBarsToRender = bufferLength - 925
     let barHeight = 0;
     let x = 0;
     const renderFrame = () => {
@@ -30,7 +31,7 @@ export class Visualization {
       analyser.getByteFrequencyData(dataArray);
       if (this.ctx !== null) {
         this.ctx.clearRect(0, 0, WIDTH, HEIGHT);
-        for (let i = 0; i < bufferLength - 925; i += 1) {
+        for (let i = 0; i < amountOfBarsToRender; i += 1) {
           barHeight =
             i < 45
               ? (dataArray[i] / 5) * (dataArray[i] / HEIGHT) * 1.5
