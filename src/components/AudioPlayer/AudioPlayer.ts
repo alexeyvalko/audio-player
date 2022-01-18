@@ -5,7 +5,6 @@ import { Visualization } from '../Visualization/Visualization';
 import { TrackInfo } from '../TrackInfo/TrackInfo';
 import { Controls } from '../Controls/Controls';
 import { AudioInfo, AudioPlayerState, ControlButtons, AudioPlayList } from '../../types/types';
-import { requestPlayList } from '../../utils/requestPlayList';
 
 export class AudioPlayer {
   element: HTMLDivElement;
@@ -26,6 +25,7 @@ export class AudioPlayer {
 
   analyser: AnalyserNode | null;
 
+
   isAudioContext: boolean;
 
   playbackBar: PlaybackBar;
@@ -33,6 +33,8 @@ export class AudioPlayer {
   requestAF: number;
 
   playlist: AudioPlayList;
+
+  isPlayable: boolean;
 
   constructor() {
     this.state = {
@@ -56,9 +58,11 @@ export class AudioPlayer {
     this.playbackBar = new PlaybackBar();
 
     this.audio = new Audio();
-    this.analyser = null;
+    this.isPlayable = true;
     this.isAudioContext = false;
     this.visualization = new Visualization();
+
+    this.analyser = null;
   }
 
   getTrack(index: number): AudioInfo {
@@ -66,9 +70,11 @@ export class AudioPlayer {
     return info;
   }
 
-  async getPlaylist() {
-    this.playlist = await requestPlayList();
+  getPlaylist(playlist: AudioPlayList) {
+    this.playlist = playlist;
+    this.initAudio();
   }
+
 
   createAudioContext() {
     if (!this.isAudioContext) {
@@ -85,7 +91,7 @@ export class AudioPlayer {
     if (this.currentTrack.url !== 'empty') {
       this.isAudioContext = false;
       this.audio = new Audio();
-      this.audio.crossOrigin = "anonymous";
+      this.audio.crossOrigin = 'anonymous';
       this.audio.src = this.currentTrack.url;
       this.addAudioListeners();
       this.trackInfo.update(this.currentTrack);
@@ -149,6 +155,7 @@ export class AudioPlayer {
     this.audio.oncanplay = async () => {
       if (this.state.play === 'play') {
         await this.audio.play();
+        this.isPlayable = true;
         this.createAudioContext();
         if (this.analyser) {
           this.visualization.render(this.analyser);
@@ -218,17 +225,24 @@ export class AudioPlayer {
         button.classList.remove('pressed');
         switch (button.dataset.name) {
           case ControlButtons.prev:
-            this.audio.pause();
-            this.prevAudio();
+            if (this.isPlayable || this.state.play === 'pause') {
+              this.isPlayable = false;
+              this.audio.pause();
+              this.prevAudio();
+            }
             break;
           case ControlButtons.next:
-            this.audio.pause();
-            this.nextAudio();
+            if (this.isPlayable || this.state.play === 'pause') {
+              this.isPlayable = false;
+              this.audio.pause();
+              this.nextAudio();
+            }
             break;
           case ControlButtons.play:
             this.state.play = ControlButtons.play;
             this.controls.switchPlayPauseButton(ControlButtons.pause);
             await this.audio.play();
+            this.isPlayable = true;
             requestAnimationFrame(() => {
               this.whilePlaying();
             });
@@ -276,14 +290,19 @@ export class AudioPlayer {
     this.container.addEventListener('mousedown', handleMouseDown);
   }
 
-  async init() {
-    await this.getPlaylist();
+  initAudio() {
     this.currentTrack = this.getTrack(this.state.trackNumber);
+    this.createAudioTrack();
+    this.addControlListeners();
+    this.addAudioListeners();
+    this.addSlidersListeners();
+  }
+
+  init() {
     this.controls.init();
     this.trackInfo.init();
     this.playbackBar.init();
     this.visualization.init();
-    this.createAudioTrack();
     this.element.classList.add('audio-player');
     this.container.classList.add('audio-container');
     this.container.append(
@@ -292,8 +311,5 @@ export class AudioPlayer {
       this.playbackBar.container,
     );
     this.element.append(this.container, this.visualization.container);
-    this.addControlListeners();
-    this.addAudioListeners();
-    this.addSlidersListeners();
   }
 }
