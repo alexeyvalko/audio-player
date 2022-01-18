@@ -21,18 +21,16 @@ export class Visualization {
     const dataArray = new Uint8Array(bufferLength);
     const WIDTH = this.element.width;
     const HEIGHT = this.element.height;
-
     const barWidth = (WIDTH / bufferLength) * 7;
     let barHeight = 0;
     let x = 0;
-
     const renderFrame = () => {
       requestAnimationFrame(renderFrame);
       x = 0;
       analyser.getByteFrequencyData(dataArray);
       if (this.ctx !== null) {
         this.ctx.clearRect(0, 0, WIDTH, HEIGHT);
-        for (let i = 0; i < bufferLength; i += 1) {
+        for (let i = 0; i < bufferLength - 925; i += 1) {
           barHeight =
             i < 45
               ? (dataArray[i] / 5) * (dataArray[i] / HEIGHT) * 1.5

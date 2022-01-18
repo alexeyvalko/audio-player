@@ -25,6 +25,7 @@ export class AudioPlayer {
 
   analyser: AnalyserNode | null;
 
+
   isAudioContext: boolean;
 
   playbackBar: PlaybackBar;
@@ -58,9 +59,10 @@ export class AudioPlayer {
 
     this.audio = new Audio();
     this.isPlayable = true;
-    this.analyser = null;
     this.isAudioContext = false;
     this.visualization = new Visualization();
+
+    this.analyser = null;
   }
 
   getTrack(index: number): AudioInfo {
@@ -72,6 +74,7 @@ export class AudioPlayer {
     this.playlist = playlist;
     this.initAudio();
   }
+
 
   createAudioContext() {
     if (!this.isAudioContext) {
