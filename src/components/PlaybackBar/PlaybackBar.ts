@@ -13,15 +13,21 @@ export class PlaybackBar {
 
   volumeButton: HTMLButtonElement;
 
+  playbackBarContainer: HTMLDivElement;
+
+  volumeSliderContainer: HTMLDivElement;
+
   constructor() {
     this.container = document.createElement('div');
 
+    this.playbackBarContainer = document.createElement('div');
     this.playbackBar = document.createElement('input');
     this.playbackBar.type = 'range';
     this.playbackBar.max = '100';
     this.playbackBar.value = '0';
     this.playbackBar.name = 'playbackSlider';
 
+    this.volumeSliderContainer = document.createElement('div');
     this.volumeSlider = document.createElement('input');
     this.volumeSlider.type = 'range';
     this.volumeSlider.classList.add('player-volume-slider');
@@ -98,14 +104,19 @@ export class PlaybackBar {
   init() {
     this.currentTime.classList.add('time');
     this.totalTime.classList.add('time');
+
+    this.volumeSliderContainer.classList.add('volume-container');
+    this.playbackBarContainer.classList.add('slider-container');
     this.playbackBar.classList.add('player-slider');
     this.container.classList.add('playback-bar');
+    this.volumeSliderContainer.append(this.volumeSlider)
+    this.playbackBarContainer.append(this.playbackBar);
     this.container.append(
       this.currentTime,
-      this.playbackBar,
+      this.playbackBarContainer,
       this.totalTime,
       this.volumeButton,
-      this.volumeSlider,
+      this.volumeSliderContainer,
     );
   }
 }
