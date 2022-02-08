@@ -45,7 +45,7 @@ export class AudioPlayer {
     this.currentTrack = {
       author: 'Loading...',
       name: 'Loading...',
-      url: 'empty',
+      src: 'empty',
     };
     this.requestAF = 0;
     this.playlist = [];
@@ -86,11 +86,11 @@ export class AudioPlayer {
   }
 
   createAudioTrack() {
-    if (this.currentTrack.url !== 'empty') {
+    if (this.currentTrack.src !== 'empty') {
       this.isAudioContext = false;
       this.audio = new Audio();
       this.audio.crossOrigin = 'anonymous';
-      this.audio.src = this.currentTrack.url;
+      this.audio.src = this.currentTrack.src;
       this.addAudioListeners();
       this.trackInfo.update(this.currentTrack);
     }

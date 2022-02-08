@@ -1,7 +1,8 @@
 export interface AudioInfo {
   author: string;
   name: string;
-  url: string;
+  src: string;
+  url?: string;
 }
 
 export type AudioPlayList = AudioInfo[];
