@@ -25,7 +25,6 @@ export class AudioPlayer {
 
   analyser: AnalyserNode | null;
 
-
   isAudioContext: boolean;
 
   playbackBar: PlaybackBar;
@@ -74,7 +73,6 @@ export class AudioPlayer {
     this.playlist = playlist;
     this.initAudio();
   }
-
 
   createAudioContext() {
     if (!this.isAudioContext) {
@@ -183,6 +181,8 @@ export class AudioPlayer {
     volumeSlider.oninput = () => {
       this.playbackBar.showRangeProgress(volumeSlider.name);
       this.audio.volume = +volumeSlider.value / 100;
+      this.audio.muted = !(this.audio.volume > 0);
+      this.state.muted = this.audio.muted ? "mute" : "unmute";
       volumeButton.className = +volumeSlider.value > 0 ? 'player-icon unmute' : 'player-icon mute';
     };
 
