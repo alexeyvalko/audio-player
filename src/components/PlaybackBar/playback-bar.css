@@ -176,6 +176,7 @@
   transform: scale(1.2);
 }
 
+.player-volume-slider::-moz-range-thumb,
 .player-slider::-moz-range-thumb {
   -webkit-appearance: none;
   -moz-appearance: none;

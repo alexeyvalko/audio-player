@@ -1,46 +1,28 @@
+import { createHtmlElement } from '../../utils/createHtmlElement';
 import './playback-bar.css';
 
 export class PlaybackBar {
-  container: HTMLDivElement;
-
-  playbackBar: HTMLInputElement;
-
-  volumeSlider: HTMLInputElement;
-
-  currentTime: HTMLDivElement;
-
-  totalTime: HTMLDivElement;
-
-  volumeButton: HTMLButtonElement;
-
-  playbackBarContainer: HTMLDivElement;
-
-  volumeSliderContainer: HTMLDivElement;
+  container = createHtmlElement('div', 'playback-bar');
+  playbackBarContainer = createHtmlElement('div', 'slider-container');
+  volumeSliderContainer = createHtmlElement('div', 'volume-container');
+  currentTime = createHtmlElement('div', 'time');
+  totalTime = createHtmlElement('div', 'time');
+  volumeButton: HTMLButtonElement = createHtmlElement('button', 'unmute', 'player-icon');
+  playbackBar: HTMLInputElement = createHtmlElement('input', 'player-slider');
+  volumeSlider: HTMLInputElement = createHtmlElement('input', 'player-volume-slider');
 
   constructor() {
-    this.container = document.createElement('div');
-
-    this.playbackBarContainer = document.createElement('div');
-    this.playbackBar = document.createElement('input');
     this.playbackBar.type = 'range';
     this.playbackBar.max = '100';
     this.playbackBar.value = '0';
     this.playbackBar.name = 'playbackSlider';
 
-    this.volumeSliderContainer = document.createElement('div');
-    this.volumeSlider = document.createElement('input');
     this.volumeSlider.type = 'range';
-    this.volumeSlider.classList.add('player-volume-slider');
     this.volumeSlider.max = '100';
     this.volumeSlider.value = '100';
     this.volumeSlider.name = 'audioVolumeSlider';
 
-    this.volumeButton = document.createElement('button');
-    this.volumeButton.className = 'unmute player-icon';
-
-    this.currentTime = document.createElement('div');
     this.currentTime.textContent = '0:00';
-    this.totalTime = document.createElement('div');
     this.totalTime.textContent = '0:00';
   }
 
@@ -102,14 +84,7 @@ export class PlaybackBar {
   }
 
   init() {
-    this.currentTime.classList.add('time');
-    this.totalTime.classList.add('time');
-
-    this.volumeSliderContainer.classList.add('volume-container');
-    this.playbackBarContainer.classList.add('slider-container');
-    this.playbackBar.classList.add('player-slider');
-    this.container.classList.add('playback-bar');
-    this.volumeSliderContainer.append(this.volumeSlider)
+    this.volumeSliderContainer.append(this.volumeSlider);
     this.playbackBarContainer.append(this.playbackBar);
     this.container.append(
       this.currentTime,

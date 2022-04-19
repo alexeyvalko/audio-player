@@ -1,31 +1,23 @@
 import { AudioInfo } from '../../types/types';
+import { createHtmlElement } from '../../utils/createHtmlElement';
 import './info-styles.css';
 
 export class TrackInfo {
-  authorElement: HTMLElement;
+  container = createHtmlElement('div', 'info-container');
+  authorElement = createHtmlElement('div', 'author-info');
+  trackNameElement = createHtmlElement('div', 'track-info');
 
-  trackNameElement: HTMLElement;
-
-  container: HTMLElement;
-
-  constructor({ author, name }:AudioInfo ) {
-    this.container = document.createElement('div');
-    this.authorElement = document.createElement('div');
-    this.trackNameElement = document.createElement('div');
+  constructor({ author, name }: AudioInfo) {
     this.authorElement.textContent = author;
     this.trackNameElement.textContent = name;
   }
 
-
-  update({ author, name }:AudioInfo) {
+  update({ author, name }: AudioInfo) {
     this.authorElement.textContent = author;
     this.trackNameElement.textContent = name;
   }
-  
+
   init() {
-    this.container.classList.add('info-container');
-    this.authorElement.classList.add('author-info');
-    this.trackNameElement.classList.add('track-info');
     this.container.append(this.trackNameElement, this.authorElement);
   }
 }
