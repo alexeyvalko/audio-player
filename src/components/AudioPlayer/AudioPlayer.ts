@@ -5,64 +5,34 @@ import { Visualization } from '../Visualization/Visualization';
 import { TrackInfo } from '../TrackInfo/TrackInfo';
 import { Controls } from '../Controls/Controls';
 import { AudioInfo, AudioPlayerState, ControlButtons, AudioPlayList } from '../../types/types';
+import { createHtmlElement } from '../../utils/createHtmlElement';
 
 export class AudioPlayer {
-  element: HTMLDivElement;
+  state: AudioPlayerState = {
+    play: 'pause',
+    muted: 'unmute',
+    autoplay: true,
+    trackNumber: 0,
+  };
 
-  container: HTMLDivElement;
+  currentTrack: AudioInfo = {
+    author: 'Loading...',
+    name: 'Loading...',
+    src: 'empty',
+  };
 
-  state: AudioPlayerState;
-
-  controls: Controls;
-
-  currentTrack: AudioInfo;
-
-  trackInfo: TrackInfo;
-
-  audio: HTMLAudioElement;
-
-  visualization: Visualization;
-
-  analyser: AnalyserNode | null;
-
-  isAudioContext: boolean;
-
-  playbackBar: PlaybackBar;
-
-  requestAF: number;
-
-  playlist: AudioPlayList;
-
-  isPlayable: boolean;
-
-  constructor() {
-    this.state = {
-      play: 'pause',
-      muted: 'unmute',
-      autoplay: true,
-      trackNumber: 0,
-    };
-    this.currentTrack = {
-      author: 'Loading...',
-      name: 'Loading...',
-      url: 'empty',
-    };
-    this.requestAF = 0;
-    this.playlist = [];
-
-    this.element = document.createElement('div');
-    this.container = document.createElement('div');
-    this.controls = new Controls();
-    this.trackInfo = new TrackInfo(this.currentTrack);
-    this.playbackBar = new PlaybackBar();
-
-    this.audio = new Audio();
-    this.isPlayable = true;
-    this.isAudioContext = false;
-    this.visualization = new Visualization();
-
-    this.analyser = null;
-  }
+  element = createHtmlElement('div', 'audio-player');
+  container = createHtmlElement('div', 'audio-container');
+  controls: Controls = new Controls();
+  trackInfo: TrackInfo = new TrackInfo(this.currentTrack);
+  visualization: Visualization = new Visualization();
+  playbackBar: PlaybackBar = new PlaybackBar();
+  audio = new Audio();
+  playlist: AudioPlayList = [];
+  analyser: AnalyserNode | null = null;
+  requestAF = 0;
+  isAudioContext = false;
+  isPlayable = true;
 
   getTrack(index: number): AudioInfo {
     const info = this.playlist[index];
@@ -86,11 +56,11 @@ export class AudioPlayer {
   }
 
   createAudioTrack() {
-    if (this.currentTrack.url !== 'empty') {
+    if (this.currentTrack.src !== 'empty') {
       this.isAudioContext = false;
       this.audio = new Audio();
       this.audio.crossOrigin = 'anonymous';
-      this.audio.src = this.currentTrack.url;
+      this.audio.src = this.currentTrack.src;
       this.addAudioListeners();
       this.trackInfo.update(this.currentTrack);
     }
@@ -160,6 +130,7 @@ export class AudioPlayer {
         }
       }
     };
+
     this.audio.onended = () => {
       if (this.state.autoplay) this.nextAudio();
     };
@@ -182,7 +153,7 @@ export class AudioPlayer {
       this.playbackBar.showRangeProgress(volumeSlider.name);
       this.audio.volume = +volumeSlider.value / 100;
       this.audio.muted = !(this.audio.volume > 0);
-      this.state.muted = this.audio.muted ? "mute" : "unmute";
+      this.state.muted = this.audio.muted ? 'mute' : 'unmute';
       volumeButton.className = +volumeSlider.value > 0 ? 'player-icon unmute' : 'player-icon mute';
     };
 
@@ -303,8 +274,6 @@ export class AudioPlayer {
     this.trackInfo.init();
     this.playbackBar.init();
     this.visualization.init();
-    this.element.classList.add('audio-player');
-    this.container.classList.add('audio-container');
     this.container.append(
       this.trackInfo.container,
       this.controls.container,

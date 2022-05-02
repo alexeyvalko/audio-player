@@ -14,7 +14,7 @@
   gap: 2px;
 }
 
-.play-pause {
+.play-pause-button {
   align-items: center;
   background-color: var(--button-color);
   height: var(--button-size);

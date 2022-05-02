@@ -41,8 +41,8 @@ module.exports = {
     }),
     new CopyPlugin({
       patterns: [
-        { from: './audio/audioPlaylist.json', to: 'audio' },
         { from: './src/favicon.ico', to: '.' },
+        { from: './audio/audioPlaylist.json', to: '.' }
       ],
     }),
   ],
