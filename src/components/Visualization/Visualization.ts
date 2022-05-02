@@ -1,24 +1,14 @@
+import { createHtmlElement } from "../../utils/createHtmlElement";
 import './visual.css';
 
 export class Visualization {
-  element: HTMLCanvasElement;
-
-  container: HTMLDivElement;
-
-  ctx: CanvasRenderingContext2D | null;
-
-  animationFrameId: number
-
-  constructor() {
-    this.element = document.createElement('canvas');
-    this.container = document.createElement('div');
-    this.ctx = this.element.getContext('2d');
-    this.animationFrameId = 0;
-  }
-
+  element: HTMLCanvasElement = createHtmlElement('canvas', 'canvas');
+  container = createHtmlElement('div', 'canvas-container');
+  ctx: CanvasRenderingContext2D | null = this.element.getContext('2d');
+  animationFrameId = 0;
 
   render(receivedAnalyser: AnalyserNode) {
-    cancelAnimationFrame(this.animationFrameId)
+    cancelAnimationFrame(this.animationFrameId);
     const analyser = receivedAnalyser;
     analyser.fftSize = 2048;
     const bufferLength = analyser.frequencyBinCount;
@@ -26,7 +16,7 @@ export class Visualization {
     const WIDTH = this.element.width;
     const HEIGHT = this.element.height;
     const barWidth = (WIDTH / bufferLength) * 7;
-    const amountOfBarsToRender = bufferLength - 925
+    const amountOfBarsToRender = bufferLength - 925;
     let barHeight = 0;
     let x = 0;
     const renderFrame = () => {
@@ -55,8 +45,6 @@ export class Visualization {
   }
 
   init() {
-    this.element.classList.add('canvas');
-    this.container.classList.add('canvas-container');
     this.container.append(this.element);
   }
 }
