@@ -179,6 +179,7 @@ export class AudioPlayer {
       if (this.state.muted === 'unmute') {
         this.audio.muted = false;
         volumeSlider.value = ` ${this.audio.volume * 100}`;
+        this.audio.volume = +volumeSlider.value / 100;
         this.playbackBar.showRangeProgress(volumeSlider.name);
       } else {
         volumeSlider.value = '0';
