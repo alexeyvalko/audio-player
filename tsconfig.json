@@ -15,7 +15,6 @@
     "forceConsistentCasingInFileNames": true,   
     "moduleResolution": "node",
     "sourceMap": true,
-    "jsx": "react"
   },
   "exclude": [
     "node_modules"
